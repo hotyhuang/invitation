@@ -1,0 +1,208 @@
+.appContainer {
+    position: absolute;
+    width: 420px;
+    height: 100%;
+    min-height: 560px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    top: 0;
+    left: calc(50% - 210px);
+    background-image: radial-gradient(#fff 0%, #f8bbd0 100%);
+}
+
+@media screen and (max-width: 420px) {
+    .appContainer {
+        width: 100%;
+        left: 0;
+    }
+}
+
+.wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 2rem;
+    z-index: 10;
+}
+
+.stage1 {
+    display: grid;
+    position: relative;
+    height: 100%;
+    grid-template-rows: 35% 30% 35%;
+}
+
+.got-married-svg {
+    width: auto;
+    height: 150px;
+    position: relative;
+    margin: 1rem 0;
+}
+
+.middle {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.bride-groom-svg {
+    position: absolute;
+    left: 50%;
+    top: 42%;
+    width: 175px;
+    height: auto;
+    margin: auto;
+    transform: translate(-20%, -50%);
+}
+
+.middle .group1 {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+}
+
+.group2-table {
+    margin: 1rem;
+}
+
+.group2-table .table-title {
+    display: block;
+    white-space: nowrap;
+}
+
+.text-name {
+    display: block;
+    writing-mode: vertical-lr;
+    text-orientation: upright;
+    font-size: 2rem;
+}
+
+.joinButton {
+    width: 60%;
+    margin: 2rem auto;
+}
+
+.decoration {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.flower {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    animation: zoomIn 2s, flash 5s linear 2s infinite;
+}
+
+.TreeCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.bottom {
+    text-align: center;
+}
+
+.lookup-text {
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+    line-height: 2rem;
+}
+
+.stage2 {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    margin: auto 3rem;
+}
+
+.inputLabel {
+    display: block;
+    margin: 1rem auto .5rem;
+}
+
+.callBtn {
+    margin: 2rem auto;
+}
+
+.input-disabled {
+    background-color: #ccc;
+    pointer-events: none;
+}
+
+
+
+/* The container */
+.myCheckbox {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 22px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    font-size: 1rem;
+}
+/* Hide the browser's default checkbox */
+.myCheckbox input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+/* Create a custom checkbox */
+.mark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+    border: 1px solid #aaa;
+}
+
+/* On mouse-over, add a grey background color */
+.myCheckbox:hover input ~ .mark {
+    background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.myCheckbox input:checked ~ .mark {
+    background-color: #2196F3;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.mark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the checkmark when checked */
+.myCheckbox input:checked ~ .mark:after {
+    display: block;
+}
+
+/* Style the checkmark/indicator */
+.myCheckbox .mark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}

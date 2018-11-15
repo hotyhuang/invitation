@@ -16,12 +16,28 @@ import InviteText from '../img/invite_text.png'
 import Erkang from '../img/erkang.jpg'
 
 import bgMusic from '../music/bg_1.mp3'
+import silenceMusic from '../music/silence.mp3'
 
 export default class Container extends Component {
     state = {
         stage: 1,
         musicPlaying: true
     }
+    // componentDidMount() {
+    //     setTimeout(() => {
+    //         this.checkAudioPlay()
+    //     }, 2000)
+    // }
+    // checkAudioPlay = () => {
+    //     if (this.bgMusic) {
+    //         if (this.bgMusic.paused) {
+    //             this.bgMusic.play()
+    //             this.setState({ musicPlaying: true })
+    //         }
+    //     } else {
+    //         setTimeout(this.checkAudioPlay(), 2000)
+    //     }
+    // }
     nextStage = () => this.setState({stage: this.state.stage + 1})
     toggleMusic = () => {
         if (this.state.musicPlaying) {
@@ -37,6 +53,7 @@ export default class Container extends Component {
 
         return (
             <div className='appContainer'>
+                <iframe src={silenceMusic} title='yoyo' allow="autoplay" style={{display: 'none'}}></iframe>
                 <audio autoPlay loop
                     ref={node => {this.bgMusic = node}} >
                     <source src={bgMusic} />
@@ -195,7 +212,10 @@ class StageTwo extends Component {
                             <span className="mark"></span>
                         </label>
                         <Button outline color="success" block
-                            className='callBtn'
+                            className={cx(
+                                'callBtn',
+                                name.length > 1 && (alone || number) ? 'glowBorder' : null
+                            )}
                             onClick={this.join}>
                             到场祝福
                         </Button>
@@ -207,11 +227,29 @@ class StageTwo extends Component {
 }
 
 class StageThree extends Component {
+    state = { popover: false }
+    togglePopover = () => this.setState({ popover: !this.state.popover })
     render() {
+        const timeAddress = (
+            <Popover
+                target='timeAddressLookup3'
+                placement='top'
+                isOpen={this.state.popover}
+                toggle={this.togglePopover} >
+                <PopoverBody>
+                    <TimeAddressTable />
+                </PopoverBody>
+            </Popover>
+        )
         return (
             <div className='stage3'>
                 <div className='welcomeText'>期待您的到来~</div>
                 <div>
+                    <div id='timeAddressLookup3' className='lookup-text'
+                        onClick={this.togglePopover}>
+                        <i>查看时间地点</i>
+                    </div>
+                    {timeAddress}
                     <img src={Erkang} alt='No Red Pocket!' className='erkang' />
                     <div className='note'>千万不要带红包！</div>
                     <div className='note'>千万不要带红包！</div>

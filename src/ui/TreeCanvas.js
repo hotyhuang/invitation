@@ -67,9 +67,10 @@ const points3 = [
 const symPoints3 = getSymmetryPoints(points3)
 const points4 = [
     {x: 0, y: height - 100},
-    {x: 40, y: (height + 50)/2},
+    {x: 40, y: height - 80},
     {x: 0, y: 80}
 ]
+
 /**
  * Animates bezier-curve
  * 
@@ -225,7 +226,7 @@ export default class TreeCanvas extends Component {
                 [...getPointsAsArray(points2), 3500, 30],
                 [...getPointsAsArray(points3), 2000],
                 [...getPointsAsArray(symPoints3), 2000],
-                [...getPointsAsArray(points4), 3000, 20]
+                [...getPointsAsArray(points4), 3000, 25]
             ]
         )
     }

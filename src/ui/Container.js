@@ -6,28 +6,60 @@ import API from './api'
 // import backgroundImg from '../img/bg.jpg'
 import './Container.css';
 
+import { IoIosMusicalNotes, IoMdVolumeOff } from 'react-icons/io'
+
 import TreeCanvas from './TreeCanvas'
 
 import BridegroomSvg from '../img/bride_groom'
 import GotMarriedSvg from '../img/got_married'
 import InviteText from '../img/invite_text.png'
+import Erkang from '../img/erkang.jpg'
+
+import bgMusic from '../music/bg_1.mp3'
 
 export default class Container extends Component {
     state = {
-        stage: 1
+        stage: 1,
+        musicPlaying: true
     }
     nextStage = () => this.setState({stage: this.state.stage + 1})
+    toggleMusic = () => {
+        if (this.state.musicPlaying) {
+            this.bgMusic.pause()
+            this.setState({ musicPlaying: false })
+        } else {
+            this.bgMusic.play()
+            this.setState({ musicPlaying: true })
+        }
+    }
     render() {
-        const { stage } = this.state
-            
-        const stage3 =
-            <div className='stage3'>Welcome</div>
+        const { stage, musicPlaying } = this.state
+
         return (
             <div className='appContainer'>
+                <audio autoPlay loop
+                    ref={node => {this.bgMusic = node}} >
+                    <source src={bgMusic} />
+                </audio>
+                <Button
+                    className={cx(
+                        'musicBtn',
+                        musicPlaying ? 'glowBorder' : null
+                    )}
+                    color={musicPlaying ? 'primary' : 'secondary'}
+                    onClick={this.toggleMusic}>
+                    {
+                        musicPlaying?
+                        <IoIosMusicalNotes />
+                        : <IoMdVolumeOff />
+                    }
+                </Button>
                 <div className='wrapper'>
-                    {stage === 1 ? <StageOne nextStage={this.nextStage} /> :
+                    {
+                        stage === 1 ? <StageOne nextStage={this.nextStage} /> :
                         stage === 2 ? <StageTwo nextStage={this.nextStage} /> :
-                        stage3}
+                        <StageThree />
+                    }
                 </div>
                 <Decoration />
             </div>
@@ -48,38 +80,30 @@ class StageOne extends Component {
                 isOpen={this.state.popover}
                 toggle={this.togglePopover} >
                 <PopoverBody>
-                    <table className='group2-table'>
-                        <tbody>
-                        <tr>
-                            <td className='table-title'>时间：</td>
-                            <td>{Constants.DateTime}</td>
-                        </tr>
-                        <tr>
-                            <td className='table-title'>地点：</td>
-                            <td>{Constants.Address}</td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <TimeAddressTable />
                 </PopoverBody>
             </Popover>
         )
         return (
             <div className='stage1'>
-                <GotMarriedSvg className='got-married-svg' />
-                <div className='middle'>
+                <div className='group1'>
+                    <GotMarriedSvg className='got-married-svg' />
+                </div>
+                <div className='group2'>
                     <BridegroomSvg className='bride-groom-svg' />
-                    <div className='group1'>
+                    <div className='nameContainer'>
                         <span className='text-name'>黄海天</span>
                         <span className='text-name'>王璐璐</span>
                     </div>
                 </div>
-                <div className='bottom'>
-                    <img src={InviteText} alt='诚挚邀请' />
-                    <div className='joinButton'>
+                <div className='group3'>
+                    <img className='invite-text-img' src={InviteText} alt='诚挚邀请' />
+                    <div className='group4'>
                         <Button
                             outline
                             block
                             color='info'
+                            className='joinBtn'
                             onClick={this.props.nextStage}>
                             我要参加
                         </Button>
@@ -99,51 +123,119 @@ class StageTwo extends Component {
     state = {
         name: '',
         number: '',
-        alone: false
+        alone: false,
+        buttonClicked: false
     }
     setName = (e) => this.setState({name: e.target.value})
-    setNum = (e) => this.setState({number: e.target.value})
+    setNum = (e) => {
+        let value = e.target.value.replace(/\D/g, '')
+        value = value > 15 ? '15'
+            : value < 1 ? '1' : value
+        this.setState({number: value})
+    }
     goAlone = () => this.setState({ alone: !this.state.alone })
     join = () => {
-        const { name, number } = this.state
-        API.add(name, number)
-            .then(resp => {
-                console.log(resp)
-            })
-            .catch(err => {
-                console.log(err)
-            })
-        this.nextStage()
+        const { name, number, alone } = this.state
+
+        this.setState({ buttonClicked: true })
+        if (name.length > 1 && (alone || number)) {
+            this.setState({ loading: true })
+            API.add(name, alone ? 1 : number)
+                .then(resp => {
+                    console.log(resp)
+                    this.setState({ loading: false })
+                    this.props.nextStage()
+                })
+                .catch(err => {
+                    this.setState({ loading: false, hasError: true })
+                    console.log(err)
+                })
+        }
     }
     render() {
-        const { name, number, alone } = this.state
+        const { name, number, alone, buttonClicked, loading, hasError } = this.state
+        const nameWarning = buttonClicked && name.length < 2
+        const numberWarning = buttonClicked && (!alone && !number)
         return (
             <div className='stage2'>
-                <span className='inputLabel'>姓名：</span>
-                <Input type='text' name='name' placeholder='您的大名'
-                    bsSize="lg"
-                    value={name} onChange={this.setName} />
-                <span className='inputLabel'>人数：</span>
-                <label class="myCheckbox">
-                    就自己去，一个人就是一个军队
-                    <input type="checkbox" value={alone}
-                        onClick={this.goAlone} />
-                    <span className="mark"></span>
-                </label>
-                <Input type='text' name='number' placeholder='跟您一起来的有几人'
-                    bsSize="lg"
-                    className={alone ? 'input-disabled' : null}
-                    value={number} onChange={this.setNum} />
-                <Button outline color="success" block
-                    className='callBtn'
-                    onClick={this.join}>
-                    到场祝福
-                </Button>
+                {
+                    hasError ?
+                    <p className='text-danger'>网络好像不太给力，请再试一次</p>
+                    : null
+                }
+                {
+                    loading ?
+                    <p className='text-info'>玩命储存中...</p>
+                    :
+                    <div>
+                        <TimeAddressTable />
+                        <span className='inputLabel'>姓名：</span>
+                        {
+                            nameWarning ?
+                                <p className='text-danger'>忘了您的大名？</p>
+                                : null
+                        }
+                        <Input type='text' name='name' placeholder='您的大名'
+                            bsSize="lg" invalid={nameWarning}
+                            value={name} onChange={this.setName} />
+                        <span className='inputLabel'>人数：</span>
+                        {
+                            numberWarning  ?
+                                <p className='text-danger'>多少人一起来？</p>
+                                : null
+                        }
+                        <Input type='number' name='number' placeholder='跟您一起来的有几人'
+                            bsSize="lg" invalid={numberWarning}
+                            className={alone ? 'input-disabled' : null}
+                            value={number} onChange={this.setNum} />
+                        <label className="myCheckbox">
+                            就自己去，一个人就是一个军队！
+                            <input type="checkbox" value={alone}
+                                onClick={this.goAlone} />
+                            <span className="mark"></span>
+                        </label>
+                        <Button outline color="success" block
+                            className='callBtn'
+                            onClick={this.join}>
+                            到场祝福
+                        </Button>
+                    </div>
+                }
             </div>
         )
     }
 }
 
+class StageThree extends Component {
+    render() {
+        return (
+            <div className='stage3'>
+                <div className='welcomeText'>期待您的到来~</div>
+                <div>
+                    <img src={Erkang} alt='No Red Pocket!' className='erkang' />
+                    <div className='note'>千万不要带红包！</div>
+                    <div className='note'>千万不要带红包！</div>
+                    <div className='note'>千万不要带红包！</div>
+                </div>
+            </div>
+        )
+    }
+}
+
+const TimeAddressTable = props => (
+    <table className='group2-table'>
+        <tbody>
+            <tr>
+                <td className='table-title'>时间：</td>
+                <td>{Constants.DateTime}</td>
+            </tr>
+            <tr>
+                <td className='table-title'>地点：</td>
+                <td>{Constants.Address}</td>
+            </tr>
+        </tbody>
+    </table>
+)
 
 class Decoration extends Component {
     render() {

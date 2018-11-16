@@ -23,21 +23,9 @@ export default class Container extends Component {
         stage: 1,
         musicPlaying: true
     }
-    // componentDidMount() {
-    //     setTimeout(() => {
-    //         this.checkAudioPlay()
-    //     }, 2000)
-    // }
-    // checkAudioPlay = () => {
-    //     if (this.bgMusic) {
-    //         if (this.bgMusic.paused) {
-    //             this.bgMusic.play()
-    //             this.setState({ musicPlaying: true })
-    //         }
-    //     } else {
-    //         setTimeout(this.checkAudioPlay(), 2000)
-    //     }
-    // }
+    componentDidMount() {
+        window.addEventListener('touchstart', this.startMusic)
+    }
     nextStage = () => this.setState({stage: this.state.stage + 1})
     toggleMusic = () => {
         if (this.state.musicPlaying) {
@@ -47,6 +35,14 @@ export default class Container extends Component {
             this.bgMusic.play()
             this.setState({ musicPlaying: true })
         }
+    }
+    startMusic = e => {
+        e.preventDefault()
+        this.setState({ musicPlaying: true })
+        if (this.bgMusic) {
+            this.bgMusic.play()
+        }
+        window.removeEventListener('touchstart', this.startMusic)
     }
     render() {
         const { stage, musicPlaying } = this.state
@@ -58,19 +54,21 @@ export default class Container extends Component {
                     ref={node => {this.bgMusic = node}} >
                     <source src={bgMusic} />
                 </audio>
-                <Button
-                    className={cx(
-                        'musicBtn',
-                        musicPlaying ? 'glowBorder' : null
-                    )}
-                    color={musicPlaying ? 'primary' : 'secondary'}
-                    onClick={this.toggleMusic}>
-                    {
-                        musicPlaying?
-                        <IoIosMusicalNotes />
-                        : <IoMdVolumeOff />
-                    }
-                </Button>
+                <div className='musicBtnContainer'>
+                    <Button
+                        className={cx(
+                            'musicBtn',
+                            musicPlaying ? 'glowBorder' : null
+                        )}
+                        color={musicPlaying ? 'primary' : 'secondary'}
+                        onClick={this.toggleMusic}>
+                        {
+                            musicPlaying?
+                            <IoIosMusicalNotes />
+                            : <IoMdVolumeOff />
+                        }
+                    </Button>
+                </div>
                 <div className='wrapper'>
                     {
                         stage === 1 ? <StageOne nextStage={this.nextStage} /> :

@@ -33,11 +33,18 @@
     grid-template-rows: 35% 30% 35%;
 }
 
-.musicBtn {
+.musicBtnContainer {
     position: absolute;
     left: 50px;
     top: 150px;
     z-index: 50;
+    opacity: 0;
+    animation: fadeIn 1s;
+    animation-fill-mode: forwards;
+    animation-delay: 5s;
+}
+
+.musicBtn {
     border-radius: 50%;
     font-size: 20px;
     padding: 3px;
@@ -64,7 +71,7 @@
     align-items: center;
     opacity: 0;
     animation: rotateIn 1s;
-    animation-delay: 2s;
+    animation-delay: 3s;
     animation-fill-mode: forwards;
 }
 

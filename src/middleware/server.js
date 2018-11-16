@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const cors = require('cors')
-const port = 8443;
+const port = 80;
 const mongodb = require("./crud.js")
 const bodyParser = require('body-parser');
 
@@ -13,6 +13,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.get("/", (req, res) => {
 	res.sendFile(__dirname + "/index.html");
 });
+
+app.get('/MP_verify_SBHGkC9eZJF3vku9.txt', (req, res) => {
+	res.sendFile(__dirname + '/MP_verify_SBHGkC9eZJF3vku9.txt')
+})
 
 app.get("/find/:query", (req, res) => {
 	const {query} = req.params

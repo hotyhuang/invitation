@@ -142,13 +142,8 @@ class StageTwo extends Component {
         buttonClicked: false
     }
     setName = (e) => this.setState({name: e.target.value})
-    setNum = (e) => {
-        let value = e.target.value.replace(/\D/g, '')
-        value = value > 15 ? '15'
-            : value < 1 ? '1' : value
-        this.setState({number: value})
-    }
-    goAlone = () => this.setState({ alone: !this.state.alone })
+    setNum = (e) => this.setState({number: e.target.value})
+    goAlone = () => this.setState({ alone: !this.state.alone, number: 1 })
     join = () => {
         const { name, number, alone } = this.state
 
@@ -199,10 +194,17 @@ class StageTwo extends Component {
                                 <p className='text-danger'>多少人一起来？</p>
                                 : null
                         }
-                        <Input type='number' name='number' placeholder='跟您一起来的有几人'
+                        <Input type='select' name='number' placeholder='跟您一起来的有几人'
                             bsSize="lg" invalid={numberWarning}
                             className={alone ? 'input-disabled' : null}
-                            value={number} onChange={this.setNum} />
+                            value={number} onChange={this.setNum}>
+                            {
+                                [...Array(10)].map((a,i) =>
+                                    <option key={i}>{i + 1}</option>
+                                )
+                            }
+                            <option>{'> 10'}</option>
+                        </Input>
                         <label className="myCheckbox">
                             就自己去，一个人就是一个军队！
                             <input type="checkbox" value={alone}
@@ -212,7 +214,7 @@ class StageTwo extends Component {
                         <Button outline color="success" block
                             className={cx(
                                 'callBtn',
-                                name.length > 1 && (alone || number) ? 'glowBorder' : null
+                                name.length > 1 && (alone || number) ? 'glowBorder' : 'disabled'
                             )}
                             onClick={this.join}>
                             到场祝福

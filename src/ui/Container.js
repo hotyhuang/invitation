@@ -251,9 +251,10 @@ class StageThree extends Component {
                     </div>
                     {timeAddress}
                     <img src={Erkang} alt='No Red Pocket!' className='erkang' />
-                    <div className='note'>千万不要带红包！</div>
-                    <div className='note'>千万不要带红包！</div>
-                    <div className='note'>千万不要带红包！</div>
+                    <p>订婚形式</p>
+                    <div className='note'>千万不要带h ong包！</div>
+                    <div className='note'>千万不要带h ong包！</div>
+                    <div className='note'>千万不要带h ong包！</div>
                 </div>
             </div>
         )

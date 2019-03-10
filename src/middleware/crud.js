@@ -12,7 +12,7 @@ const url = 'mongodb://localhost:27017';
 const dbName = 'people';
 const collectionName = 'table'
 
-
+// yoyo
 const callApi = (method, callback = ()=>{} , ...args) =>
 	mongoose.connect(`${url}/${dbName}`,
 		(err, db) => {
